@@ -1,4 +1,7 @@
 import React from 'react';
+import { Chart } from './Chart';
+
+import { getExchangeRateValue } from './helpers';
 
 export interface CurrencyExchangeProps {
   currencyOptions: {
@@ -7,32 +10,28 @@ export interface CurrencyExchangeProps {
   }[];
 }
 
-const getExchangeRateValue = (apiReturn: any): number => {
-  if (apiReturn) {
-    return apiReturn['Realtime Currency Exchange Rate']['5. Exchange Rate'];
-  }
-
-  return 0;
-};
-
 const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
   currencyOptions,
 }) => {
   const [amount, setAmount] = React.useState('');
-  const [from, setFrom] = React.useState('');
-  const [to, setTo] = React.useState('');
+  const [result, setResult] = React.useState<number | undefined>(undefined);
   const [exchangeRateValue, setExchangeRateValue] = React.useState<
     number | undefined
   >(undefined);
-  const [result, setResult] = React.useState<number | undefined>(undefined);
+  const [currencies, setCurrencies] = React.useState({
+    from: '',
+    to: '',
+  });
 
   const isInitialMount = React.useRef(true);
   React.useEffect(() => {
+    const { from, to } = currencies;
+
     if (isInitialMount.current) {
       isInitialMount.current = false;
     } else {
       if (from && to) {
-        const fetchResult = async () => {
+        const fetchCurrencyExchange = async () => {
           const result = await window.fetch(
             `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${to}&apikey=1R5D4TP5IQQ2N4IV`,
             {
@@ -45,10 +44,10 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
           setExchangeRateValue(getExchangeRateValue(apiResponse));
         };
 
-        fetchResult();
+        fetchCurrencyExchange();
       }
     }
-  }, [from, to]);
+  }, [currencies]);
 
   React.useEffect(() => {
     if (isInitialMount.current) {
@@ -65,37 +64,34 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
     setAmount(event.target.value.replace(/[^0-9]/g, ''));
   };
 
-  const handleFromOptionChange = (
+  const handelCurrenciesOptionChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
-    setFrom(event.target.value);
-  };
-
-  const handleToOptionChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ): void => {
-    setTo(event.target.value);
+    setCurrencies({ ...currencies, [event.target.name]: event.target.value });
   };
 
   return (
     <>
       <>
-        <label htmlFor='amount'>Amount</label>
-        <input
-          type='text'
-          name='amount'
-          id='amount'
-          value={amount}
-          onChange={handleInputChange}
-        />
+        <>
+          <label htmlFor='amount'>Amount</label>
+          <input
+            type='text'
+            name='amount'
+            id='amount'
+            value={amount}
+            onChange={handleInputChange}
+          />
+        </>
+        <>{result && <p>{result}</p>}</>
       </>
       <>
         <label htmlFor='from'>From</label>
         <select
           name='from'
           id='from'
-          value={from}
-          onChange={handleFromOptionChange}
+          value={currencies.from}
+          onChange={handelCurrenciesOptionChange}
         >
           <option />
           {currencyOptions.map((option) => (
@@ -107,7 +103,12 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
       </>
       <>
         <label htmlFor='to'>To</label>
-        <select name='to' id='to' value={to} onChange={handleToOptionChange}>
+        <select
+          name='to'
+          id='to'
+          value={currencies.to}
+          onChange={handelCurrenciesOptionChange}
+        >
           <option />
           {currencyOptions.map((option) => (
             <option key={option.name} value={option.code}>
@@ -117,7 +118,7 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
         </select>
       </>
 
-      {result && <p>{result}</p>}
+      <Chart currencies={currencies} />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { render, fireEvent, act } from '@testing-library/react';
 
 import CurrencyExchange from './CurrencyExchange';
+import * as ChartExports from './Chart';
 
 const fetchResponseOk = (body: any) =>
   Promise.resolve({
@@ -8,31 +9,35 @@ const fetchResponseOk = (body: any) =>
     json: () => Promise.resolve(body),
   });
 
+const mockProps = {
+  currencyOptions: [
+    { code: 'code1', name: 'name1' },
+    { code: 'code2', name: 'name2' },
+  ],
+};
+
+const mockApiResponse = {
+  'Realtime Currency Exchange Rate': {
+    '5. Exchange Rate': '1.5',
+  },
+};
+
 describe('CurrencyExchange', () => {
   let spyFetch: jest.SpyInstance;
-
-  const mockProps = {
-    currencyOptions: [
-      { code: 'code1', name: 'name1' },
-      { code: 'code2', name: 'name2' },
-    ],
-  };
-
-  const mockApiResponse = {
-    'Realtime Currency Exchange Rate': {
-      '5. Exchange Rate': '1.5',
-    },
-  };
+  let spyChart: jest.SpyInstance;
 
   beforeEach(() => {
     spyFetch = jest
       .spyOn(window, 'fetch')
       //@ts-ignore
       .mockReturnValue(fetchResponseOk(mockApiResponse));
+    //@ts-ignore
+    spyChart = jest.spyOn(ChartExports, 'Chart').mockReturnValue(null);
   });
 
   afterEach(() => {
     spyFetch.mockRestore();
+    spyChart.mockRestore();
   });
 
   it('does not fetch data when component mount', () => {
@@ -105,6 +110,31 @@ describe('CurrencyExchange', () => {
       })
     );
     expect(queryByText(result)).toBeInTheDocument();
+  });
+
+  it('initially passes empty from and to currencies to Chart', () => {
+    render(<CurrencyExchange {...mockProps} />);
+
+    expect(spyChart).toHaveBeenCalledWith(
+      { currencies: { from: '', to: '' } },
+      expect.anything()
+    );
+  });
+
+  it('passes from and to state when changed', async () => {
+    const { getByLabelText } = render(<CurrencyExchange {...mockProps} />);
+    const fromSelect = getByLabelText('From') as HTMLSelectElement;
+    const toSelect = getByLabelText('To') as HTMLSelectElement;
+
+    fireEvent.change(fromSelect, { target: { value: 'code1' } });
+    expect(window.fetch).not.toBeCalled();
+    await act(async () => {
+      fireEvent.change(toSelect, { target: { value: 'code2' } });
+    });
+    expect(spyChart).toHaveBeenLastCalledWith(
+      { currencies: { from: 'code1', to: 'code2' } },
+      expect.anything()
+    );
   });
 
   describe('amount field', () => {

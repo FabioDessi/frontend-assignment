@@ -1,12 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import CurrencyExchange from './CurrencyExchange';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CurrencyExchange
+      currencyOptions={[
+        {
+          code: 'eur',
+          name: 'eur',
+        },
+        {
+          code: 'usd',
+          name: 'usd',
+        },
+      ]}
+    />
   </React.StrictMode>,
   document.getElementById('root')
 );
