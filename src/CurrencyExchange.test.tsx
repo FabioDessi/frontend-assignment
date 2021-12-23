@@ -1,6 +1,6 @@
 import { render, fireEvent, act } from '@testing-library/react';
 
-import CurrencyExchange from './CurrencyExchange';
+import { CurrencyExchange } from './CurrencyExchange';
 import * as ChartExports from './Chart';
 
 const fetchResponseOk = (body: any) =>

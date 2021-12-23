@@ -38,4 +38,11 @@ const getExchangeRateValue = (apiReturn: any): number => {
   return 0;
 };
 
-export { getHistoricalData, getExchangeRateValue };
+const getCurrencyData = (rawData: any): { code: string; name: string }[] => {
+  return rawData.map((row: any) => ({
+    code: row['currency code'],
+    name: row['currency name'],
+  }));
+};
+
+export { getHistoricalData, getExchangeRateValue, getCurrencyData };

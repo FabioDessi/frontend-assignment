@@ -10,7 +10,7 @@ export interface CurrencyExchangeProps {
   }[];
 }
 
-const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
+export const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
   currencyOptions,
 }) => {
   const [amount, setAmount] = React.useState('');
@@ -95,7 +95,7 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
         >
           <option />
           {currencyOptions.map((option) => (
-            <option key={option.name} value={option.code}>
+            <option key={option.code} value={option.code}>
               {option.name}
             </option>
           ))}
@@ -111,7 +111,7 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
         >
           <option />
           {currencyOptions.map((option) => (
-            <option key={option.name} value={option.code}>
+            <option key={option.code} value={option.code}>
               {option.name}
             </option>
           ))}
@@ -122,5 +122,3 @@ const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
     </>
   );
 };
-
-export default CurrencyExchange;
