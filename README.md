@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+# Secfi Assignment Front-End Engineers
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**author: [fabioDessi](https://github.com/FabioDessi/)**
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- How much time did you end up spending on it?
+- What are some of the design decisions you made?
+- What do you like about your implementation?
+- What would you improve next time?
 
-### `yarn start`
+### How much time did you end up spending on it?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+I've spent approximately 10 hours with this project, some of the time was spent on understanding the api and i've used this opportunity to try some tdd techniques i've recently studied.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### What are some of the design decisions you made?
 
-### `yarn test`
+Starting from the boilerplate, I've decided to use create-react-app and extend it with prettier, elsint and husky. As for styling i've used [styled-component](https://www.npmjs.com/package/styled-components), and for parsing the csv currencies list i've used [papa parse](https://www.npmjs.com/package/papaparse).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Going into the app development, i've opted for a tdd approach, took this test as an opportunity to try out some techniques studied recently.
 
-### `yarn build`
+on the components side, i've decided to keep the application simple, splitting the api calls and initialization in this way:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- The _App_ component converts the csv into an array of objects with the currencies and passes it to the _CurrencyExchange_ component
+- All the interaction is handled in the _CurrencyExchange_ components, states for the inputs are set here, including the call to the _CURRENCY_EXCHANGE_RATE_.
+- The Second call, to _FX_DAILY_ is on the _Chart_ component, this call is sent after the from and to values are set and passed as props. The Chart is loaded only once the value is set
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### What do you like about your implementation?
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The TDD approach is something i enjoyed.
 
-### `yarn eject`
+I like how using some helpers just before setting the state for the api call results, the components can be easily reused with some other provider, with some tweak on the helpers.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### What would you improve next time?
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Creating custom hooks for the api calls and add cache, error and loading statuses.
+Prefer to avoid for this time, since the development was already taking so long.
