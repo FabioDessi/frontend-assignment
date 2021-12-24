@@ -7,8 +7,11 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from 'recharts';
+
 import { getHistoricalData, HistoricalData } from './helpers';
+import { ChartWrapper } from './StyledComponents';
 
 interface ChartProps {
   currencies: {
@@ -43,26 +46,26 @@ export const Chart: React.FC<ChartProps> = ({ currencies }: ChartProps) => {
 
   if (historicalData) {
     return (
-      <>
-        <LineChart
-          width={800}
-          height={600}
-          data={historicalData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='name' />
-          <YAxis dataKey='high' />
-          <Tooltip />
-          <Legend />
-          <Line type='monotone' dataKey='high' stroke='#8884d8' />
-        </LineChart>
-      </>
+      <ChartWrapper>
+        <ResponsiveContainer width={'100%'} height={600}>
+          <LineChart
+            data={historicalData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis dataKey='name' />
+            <YAxis dataKey='high' />
+            <Tooltip />
+            <Legend />
+            <Line type='monotone' dataKey='high' stroke='#8884d8' />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartWrapper>
     );
   } else return null;
 };

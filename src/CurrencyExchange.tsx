@@ -2,6 +2,14 @@ import React from 'react';
 import { Chart } from './Chart';
 
 import { getExchangeRateValue } from './helpers';
+import {
+  CurrencyExchangeWrapper,
+  InputWrapper,
+  StyledLabel,
+  StyledInput,
+  StyledSelect,
+  ResultContainer,
+} from './StyledComponents';
 
 export interface CurrencyExchangeProps {
   currencyOptions: {
@@ -14,7 +22,7 @@ export const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
   currencyOptions,
 }) => {
   const [amount, setAmount] = React.useState('');
-  const [result, setResult] = React.useState<number | undefined>(undefined);
+  const [result, setResult] = React.useState<number>(0);
   const [exchangeRateValue, setExchangeRateValue] = React.useState<
     number | undefined
   >(undefined);
@@ -72,52 +80,54 @@ export const CurrencyExchange: React.FC<CurrencyExchangeProps> = ({
 
   return (
     <>
-      <>
-        <>
-          <label htmlFor='amount'>Amount</label>
-          <input
+      <CurrencyExchangeWrapper>
+        <InputWrapper>
+          <StyledLabel htmlFor='amount'>Amount</StyledLabel>
+          <StyledInput
             type='text'
             name='amount'
             id='amount'
             value={amount}
             onChange={handleInputChange}
           />
-        </>
-        <>{result && <p>{result}</p>}</>
-      </>
-      <>
-        <label htmlFor='from'>From</label>
-        <select
-          name='from'
-          id='from'
-          value={currencies.from}
-          onChange={handelCurrenciesOptionChange}
-        >
-          <option />
-          {currencyOptions.map((option) => (
-            <option key={option.code} value={option.code}>
-              {option.name}
-            </option>
-          ))}
-        </select>
-      </>
-      <>
-        <label htmlFor='to'>To</label>
-        <select
-          name='to'
-          id='to'
-          value={currencies.to}
-          onChange={handelCurrenciesOptionChange}
-        >
-          <option />
-          {currencyOptions.map((option) => (
-            <option key={option.code} value={option.code}>
-              {option.name}
-            </option>
-          ))}
-        </select>
-      </>
-
+        </InputWrapper>
+        <InputWrapper style={{ marginLeft: 'auto' }}>
+          <StyledLabel htmlFor='from'>From</StyledLabel>
+          <StyledSelect
+            name='from'
+            id='from'
+            value={currencies.from}
+            onChange={handelCurrenciesOptionChange}
+          >
+            <option />
+            {currencyOptions.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.name}
+              </option>
+            ))}
+          </StyledSelect>
+        </InputWrapper>
+        <InputWrapper>
+          <StyledLabel>Result</StyledLabel>
+          <ResultContainer>{result}</ResultContainer>
+        </InputWrapper>
+        <InputWrapper>
+          <StyledLabel htmlFor='to'>To</StyledLabel>
+          <StyledSelect
+            name='to'
+            id='to'
+            value={currencies.to}
+            onChange={handelCurrenciesOptionChange}
+          >
+            <option />
+            {currencyOptions.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.name}
+              </option>
+            ))}
+          </StyledSelect>
+        </InputWrapper>
+      </CurrencyExchangeWrapper>
       <Chart currencies={currencies} />
     </>
   );

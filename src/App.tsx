@@ -1,7 +1,15 @@
 import React from 'react';
 import Papa from 'papaparse';
+
 import { CurrencyExchange } from './CurrencyExchange';
 import { getCurrencyData } from './helpers';
+import {
+  GlobalStyle,
+  AppWrapper,
+  TextWrapper,
+  StyledH1,
+  StyledH3,
+} from './StyledComponents';
 
 export const App: React.FC = () => {
   const [currencies, setCurrencies] = React.useState([]);
@@ -20,9 +28,19 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <AppWrapper>
+      <GlobalStyle />
+      <TextWrapper>
+        <StyledH1>Currency converter</StyledH1>
+        <StyledH3>
+          Input the amount and choose the currency values
+          <br />A graph showing the historical rates will also appear on the
+          screen
+        </StyledH3>
+      </TextWrapper>
+
       <CurrencyExchange currencyOptions={currencies} />
-    </>
+    </AppWrapper>
   );
 };
 
